@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <nav>
+        <a href={% url "inicio" %}>Inicio</a>
+        <a href={% url "crear_auto" %}>Crear Auto</a>
+        <a href={% url "listado_de_autos" %}>Listado de Autos</a>
+        <a href={% url "iniciar_sesion" %}>Iniciar Sesion</a>
+        {% comment %} <a href={% url "cerrar_sesion" %}>Cerrar Sesion</a> {% endcomment %}
+        <form action={% url "cerrar_sesion" %} method="POST">
+            {% csrf_token %}
+            <input type="submit" value="Cerrar Sesion">
+        </form>
+
+    </nav>
+    
+    <h1>{% block texto_h1 %} HOLA SOY EL H1 DEL BASE {% endblock texto_h1 %}</h1>
+
+    {% block contenido %}{% endblock contenido %}
+
+</body>
+</html>

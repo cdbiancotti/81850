@@ -1,27 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <nav>
-        <a href={% url "inicio" %}>Inicio</a>
-        <a href={% url "crear_auto" %}>Crear Auto</a>
-        <a href={% url "listado_de_autos" %}>Listado de Autos</a>
-    </nav>
-    <h1>Listado de Autos</h1>
 
-    {% if autos %}
+{% extends "base.html" %}
+{% block texto_h1 %} Listado de Autos{% endblock texto_h1 %}
+
+{% block contenido %}
+
+    <form action="" method="GET">
+
+        {{formulario}}
+
+        <input type="submit" value="Buscar">
+    </form>
+
+    {% if autos_buscados %}
         <ul>
-            {% for auto in autos %}
-                <li>{{auto}}</li>
+            {% for auto in autos_buscados %}
+                <li>
+                    {{auto}}
+                    | <a href={% url "auto_detalle" auto.id %}>Detalle</a> 
+                    | <a href={% url "auto_actualizar" auto.id %}>Actualizar</a> 
+                    | <a href={% url "auto_borrar" auto.id %}>Borrar</a> 
+                </li>
             {% endfor %}
         </ul>
     {% else %}
         <p>No hay datos.</p>
     {% endif %}
 
-</body>
-</html>
+{% endblock contenido %}

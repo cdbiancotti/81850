@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from inicio.models import Auto
-from inicio.forms import FormularioCrearAuto
+from inicio.forms import FormularioCrearAuto, FormularioBuscarAuto
+from django.views.generic.edit import DeleteView, UpdateView
+from django.urls import reverse_lazy
 
 def inicio(request):
     
@@ -40,6 +42,39 @@ def crear_auto(request):
 
 def listado_de_autos(request):
 
-    autos = Auto.objects.all()
+    formulario = FormularioBuscarAuto(request.GET)
+    if formulario.is_valid():
+        marca_a_buscar = formulario.cleaned_data['marca']
+        modelo_a_buscar = formulario.cleaned_data['modelo']
+        autos_buscados = Auto.objects.filter(marca__icontains=marca_a_buscar, modelo__icontains=modelo_a_buscar)
+    # else:
+    #     autos_buscados = Auto.objects.all()
     
-    return render(request, 'listado_de_autos.html', {'autos': autos})
+    return render(request, 'listado_de_autos.html', {'autos_buscados': autos_buscados, 'formulario': formulario})
+
+
+def auto_detalle(request, id_auto):
+    auto = Auto.objects.get(id=id_auto)
+    return render(request, 'auto_detalle.html', {'auto': auto})
+
+
+# def auto_borrado(request, id_auto):
+#     auto = Auto.objects.get(id=id_auto)
+#     auto.delete()
+#     return render(request, 'auto_detalle.html', {'auto': auto})
+
+class AutoBorrar(DeleteView):
+    model = Auto
+    template_name = "auto_borrar.html"
+    success_url = reverse_lazy('listado_de_autos')
+
+
+class AutoActualizar(UpdateView):
+    model = Auto
+    template_name = "auto_actualizar.html"
+    success_url = reverse_lazy('listado_de_autos')
+    # fields = ['marca']
+    # fields = ['marca', 'modelo']
+    fields = '__all__'
+    
+

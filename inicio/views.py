@@ -4,6 +4,8 @@ from inicio.models import Auto
 from inicio.forms import FormularioCrearAuto, FormularioBuscarAuto
 from django.views.generic.edit import DeleteView, UpdateView
 from django.urls import reverse_lazy
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 def inicio(request):
     
@@ -21,17 +23,18 @@ def inicio(request):
 #     return render(request, 'crear_auto_v1.html', {'auto': auto})
 
 # v2
+@login_required
 def crear_auto(request):
     
     
     print(request.POST)
     
     if request.method == "POST":
-        formulario = FormularioCrearAuto(request.POST)
+        formulario = FormularioCrearAuto(request.POST, request.FILES)
         if formulario.is_valid():
             info = formulario.cleaned_data
 
-            auto = Auto(marca=info.get('marca'), modelo=info.get('modelo'))
+            auto = Auto(marca=info.get('marca'), modelo=info.get('modelo'), imagen=info.get('imagen'))
             auto.save()
         
             return redirect('listado_de_autos')
@@ -63,13 +66,13 @@ def auto_detalle(request, id_auto):
 #     auto.delete()
 #     return render(request, 'auto_detalle.html', {'auto': auto})
 
-class AutoBorrar(DeleteView):
+class AutoBorrar(LoginRequiredMixin, DeleteView):
     model = Auto
     template_name = "auto_borrar.html"
     success_url = reverse_lazy('listado_de_autos')
 
 
-class AutoActualizar(UpdateView):
+class AutoActualizar(LoginRequiredMixin, UpdateView):
     model = Auto
     template_name = "auto_actualizar.html"
     success_url = reverse_lazy('listado_de_autos')

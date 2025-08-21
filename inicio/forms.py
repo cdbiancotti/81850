@@ -6,6 +6,7 @@ class FormularioBaseAuto(forms.Form):
     
 class FormularioCrearAuto(FormularioBaseAuto):
     modelo = forms.CharField(max_length=20)
+    imagen = forms.ImageField(required=False)
     
 
 class FormularioBuscarAuto(FormularioBaseAuto): 

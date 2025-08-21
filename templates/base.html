@@ -10,12 +10,19 @@
         <a href={% url "inicio" %}>Inicio</a>
         <a href={% url "crear_auto" %}>Crear Auto</a>
         <a href={% url "listado_de_autos" %}>Listado de Autos</a>
-        <a href={% url "iniciar_sesion" %}>Iniciar Sesion</a>
-        {% comment %} <a href={% url "cerrar_sesion" %}>Cerrar Sesion</a> {% endcomment %}
+
+
+        {% if request.user.is_authenticated %}
+        <a href={% url "perfil" %}>{{request.user.username}}</a>
         <form action={% url "cerrar_sesion" %} method="POST">
             {% csrf_token %}
             <input type="submit" value="Cerrar Sesion">
         </form>
+        {% else %}
+        <a href={% url "iniciar_sesion" %}>Iniciar Sesion</a>
+        <a href={% url "registro" %}>Registrarse</a>
+        {% endif %}
+        
 
     </nav>
     
